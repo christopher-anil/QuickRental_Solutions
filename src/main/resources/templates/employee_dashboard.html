@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard | QuickRental Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.3)),
+                        url('background.jpg') center/cover no-repeat;
+            color: white;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .option-btn {
+            background-color: #4e46e5;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .option-btn:hover {
+            transform: scale(1.05);
+            background-color: #3b36c7;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome, <span th:text="${employeeName}">Employee</span>!</h1>
+
+    <div class="btn-container">
+        <button class="option-btn" onclick="window.location.href='/vehicles/available'">Available Vehicles</button>
+        <button class="option-btn" onclick="window.location.href='/vehicles/booked'">Booked Vehicles</button>
+        <button class="option-btn" onclick="window.location.href='/vehicles/rented'">Rented Vehicles</button>
+    </div>
+
+</body>
+</html>

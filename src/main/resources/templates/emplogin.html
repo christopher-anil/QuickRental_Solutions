@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Login | QuickRental Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="icon.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.3)),
+                        url('background.jpg') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 30px;
+            z-index: 10;
+        }
+
+        .navbar .logo {
+            font-family: "Poppins";
+            font-size: 1.2rem;
+        }
+
+        .navbar .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .navbar .home-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .navbar .home-btn:hover {
+            opacity: 0.8;
+            background-color: #ffffff;
+            color: #000000;  
+        }
+
+        /* Login Card */
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 45px;
+            border-radius: 16px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+            margin-top: 40px;
+            transition: transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        box-shadow 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        background 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        /* Smooth Hover Animation */
+        .login-container:hover {
+            transform: translateY(-5px) scale(1.015);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .login-container h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #222;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1.5px solid #ccc;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #4e46e5;
+            outline: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: #4e46e5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 0;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: #3b36c7;
+        }
+
+        .switch-login {
+            font-size: 0.85rem;
+            color: #333;
+            margin-top: 15px;
+        }
+
+        .switch-login a {
+            color: #4e46e5;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .switch-login a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                width: 90%;
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">QuickRental Solutions</div>
+        <div class="buttons">
+            <button onclick="window.location.href='/'" class="home-btn">Home</button>
+        </div>
+    </header>
+
+    <div class="login-container">
+        <h2>Employee Login</h2>
+        <form th:action="@{/emplogin}" method="POST">
+            <div class="input-group">
+                <label for="username">Email</label>
+                <input type="text" id="username" name="username" placeholder="Enter your email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+
+        <div class="switch-login">
+            <p th:text="${error}" style="color:red;"></p>
+            Not an employee? <a href="/login">Customer Login</a>
+        </div>
+    </div>
+
+</body>
+</html>
