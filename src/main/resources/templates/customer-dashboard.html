@@ -33,6 +33,9 @@
 
         .navbar .logo {
             font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            cursor: pointer;
         }
 
         .navbar .nav-links {
@@ -97,7 +100,7 @@
         }
 
         .category-title {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 600;
             color: #222;
         }
@@ -204,6 +207,117 @@
             color: #333;
         }
 
+        /* Logout Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 35px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+            text-align: center;
+        }
+
+        .modal-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: #222;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .modal-message {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-cancel {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .btn-cancel:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, #e54646 0%, #f16363 100%);
+            color: white;
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 70, 70, 0.4);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
         @media (max-width: 768px) {
             .vehicles-grid {
                 grid-template-columns: 1fr;
@@ -217,19 +331,44 @@
             .category-header {
                 flex-wrap: wrap;
             }
+
+            .modal-content {
+                padding: 25px;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <nav class="navbar">
-        <div class="logo">QuickRental Solutions</div>
+        <div class="logo" onclick="window.location.href='/'">QuickRental Solutions</div>
         <div class="nav-links">
-            <span th:text="'Welcome, ' + ${customerName}"></span>
+            <span th:text="'👤 Welcome, ' + ${customerName}">👤 Welcome, Customer</span>
             <a href="/customer/dashboard">Dashboard</a>
             <a href="/customer/rentals">My Rentals</a>
-            <button onclick="window.location.href='/logout'">Logout</button>
+            <button onclick="showLogoutModal()">Logout</button>
         </div>
     </nav>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal-overlay" id="logoutModal" onclick="closeModalOnOverlay(event)">
+        <div class="modal-content">
+            <div class="modal-icon">🏃</div>
+            <h2 class="modal-title">Confirm Logout</h2>
+            <p class="modal-message">Are you sure you want to logout from your account?</p>
+            <div class="modal-buttons">
+                <button class="btn btn-cancel" onclick="hideLogoutModal()">Cancel</button>
+                <button class="btn btn-logout" onclick="confirmLogout()">Logout</button>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <div class="welcome">
@@ -247,25 +386,25 @@
             <div class="category-section" th:if="${!vehicles.?[vehicleType.name() == 'CAR'].isEmpty()}">
                 <div class="category-header">
                     <div class="category-title">🚗 Cars</div>
-                    <div class="category-count" th:text="${vehicles.?[vehicleType.name() == 'CAR'].size()} + ' available'"></div>
+                    <div class="category-count" th:text="${vehicles.?[vehicleType.name() == 'CAR'].size()} + ' available'">5 available</div>
                 </div>
                 <div class="vehicles-grid">
                     <div class="vehicle-card" th:each="vehicle : ${vehicles.?[vehicleType.name() == 'CAR']}">
                         <div class="vehicle-card-body">
-                            <div class="vehicle-name" th:text="${vehicle.name}"></div>
-                            <div class="vehicle-brand" th:text="${vehicle.brand + ' ' + vehicle.model}"></div>
+                            <div class="vehicle-name" th:text="${vehicle.name}">Swift Dzire</div>
+                            <div class="vehicle-brand" th:text="${vehicle.brand + ' ' + vehicle.model}">Maruti 2023</div>
                             <div class="vehicle-details">
                                 <div class="detail-item">
-                                    <span>Fuel:</span> <span th:text="${vehicle.fuelType}"></span>
+                                    <span>Fuel:</span> <span th:text="${vehicle.fuelType}">Petrol</span>
                                 </div>
                                 <div class="detail-item">
-                                    <span>Transmission:</span> <span th:text="${vehicle.transmission}"></span>
+                                    <span>Transmission:</span> <span th:text="${vehicle.transmission}">Manual</span>
                                 </div>
                                 <div class="detail-item">
-                                    <span>Seats:</span> <span th:text="${vehicle.seatingCapacity}"></span>
+                                    <span>Seats:</span> <span th:text="${vehicle.seatingCapacity}">5</span>
                                 </div>
                             </div>
-                            <div class="vehicle-price" th:text="'₹' + ${#numbers.formatDecimal(vehicle.ratePerDay, 0, 2)} + '/day'"></div>
+                            <div class="vehicle-price" th:text="'₹' + ${#numbers.formatDecimal(vehicle.ratePerDay, 0, 2)} + '/day'">₹1,200/day</div>
                             <button class="book-btn" th:onclick="'window.location.href=\'/customer/book/' + ${vehicle.vehicleId} + '\''">
                                 Book Now
                             </button>
@@ -278,25 +417,25 @@
             <div class="category-section" th:if="${!vehicles.?[vehicleType.name() == 'BIKE'].isEmpty()}">
                 <div class="category-header">
                     <div class="category-title">🏍️ Bikes</div>
-                    <div class="category-count" th:text="${vehicles.?[vehicleType.name() == 'BIKE'].size()} + ' available'"></div>
+                    <div class="category-count" th:text="${vehicles.?[vehicleType.name() == 'BIKE'].size()} + ' available'">3 available</div>
                 </div>
                 <div class="vehicles-grid">
                     <div class="vehicle-card" th:each="vehicle : ${vehicles.?[vehicleType.name() == 'BIKE']}">
                         <div class="vehicle-card-body">
-                            <div class="vehicle-name" th:text="${vehicle.name}"></div>
-                            <div class="vehicle-brand" th:text="${vehicle.brand + ' ' + vehicle.model}"></div>
+                            <div class="vehicle-name" th:text="${vehicle.name}">Royal Enfield</div>
+                            <div class="vehicle-brand" th:text="${vehicle.brand + ' ' + vehicle.model}">Classic 350</div>
                             <div class="vehicle-details">
                                 <div class="detail-item">
-                                    <span>Fuel:</span> <span th:text="${vehicle.fuelType}"></span>
+                                    <span>Fuel:</span> <span th:text="${vehicle.fuelType}">Petrol</span>
                                 </div>
                                 <div class="detail-item">
-                                    <span>Transmission:</span> <span th:text="${vehicle.transmission}"></span>
+                                    <span>Transmission:</span> <span th:text="${vehicle.transmission}">Manual</span>
                                 </div>
                                 <div class="detail-item">
-                                    <span>Seats:</span> <span th:text="${vehicle.seatingCapacity}"></span>
+                                    <span>Seats:</span> <span th:text="${vehicle.seatingCapacity}">2</span>
                                 </div>
                             </div>
-                            <div class="vehicle-price" th:text="'₹' + ${#numbers.formatDecimal(vehicle.ratePerDay, 0, 2)} + '/day'"></div>
+                            <div class="vehicle-price" th:text="'₹' + ${#numbers.formatDecimal(vehicle.ratePerDay, 0, 2)} + '/day'">₹800/day</div>
                             <button class="book-btn" th:onclick="'window.location.href=\'/customer/book/' + ${vehicle.vehicleId} + '\''">
                                 Book Now
                             </button>
@@ -309,25 +448,25 @@
             <div class="category-section" th:if="${!vehicles.?[vehicleType.name() == 'SCOOTER'].isEmpty()}">
                 <div class="category-header">
                     <div class="category-title">🛵 Scooters</div>
-                    <div class="category-count" th:text="${vehicles.?[vehicleType.name() == 'SCOOTER'].size()} + ' available'"></div>
+                    <div class="category-count" th:text="${vehicles.?[vehicleType.name() == 'SCOOTER'].size()} + ' available'">4 available</div>
                 </div>
                 <div class="vehicles-grid">
                     <div class="vehicle-card" th:each="vehicle : ${vehicles.?[vehicleType.name() == 'SCOOTER']}">
                         <div class="vehicle-card-body">
-                            <div class="vehicle-name" th:text="${vehicle.name}"></div>
-                            <div class="vehicle-brand" th:text="${vehicle.brand + ' ' + vehicle.model}"></div>
+                            <div class="vehicle-name" th:text="${vehicle.name}">Activa 6G</div>
+                            <div class="vehicle-brand" th:text="${vehicle.brand + ' ' + vehicle.model}">Honda 2023</div>
                             <div class="vehicle-details">
                                 <div class="detail-item">
-                                    <span>Fuel:</span> <span th:text="${vehicle.fuelType}"></span>
+                                    <span>Fuel:</span> <span th:text="${vehicle.fuelType}">Petrol</span>
                                 </div>
                                 <div class="detail-item">
-                                    <span>Transmission:</span> <span th:text="${vehicle.transmission}"></span>
+                                    <span>Transmission:</span> <span th:text="${vehicle.transmission}">Automatic</span>
                                 </div>
                                 <div class="detail-item">
-                                    <span>Seats:</span> <span th:text="${vehicle.seatingCapacity}"></span>
+                                    <span>Seats:</span> <span th:text="${vehicle.seatingCapacity}">2</span>
                                 </div>
                             </div>
-                            <div class="vehicle-price" th:text="'₹' + ${#numbers.formatDecimal(vehicle.ratePerDay, 0, 2)} + '/day'"></div>
+                            <div class="vehicle-price" th:text="'₹' + ${#numbers.formatDecimal(vehicle.ratePerDay, 0, 2)} + '/day'">₹500/day</div>
                             <button class="book-btn" th:onclick="'window.location.href=\'/customer/book/' + ${vehicle.vehicleId} + '\''">
                                 Book Now
                             </button>
@@ -337,5 +476,32 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function showLogoutModal() {
+            document.getElementById('logoutModal').classList.add('active');
+        }
+
+        function hideLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('active');
+        }
+
+        function closeModalOnOverlay(event) {
+            if (event.target.id === 'logoutModal') {
+                hideLogoutModal();
+            }
+        }
+
+        function confirmLogout() {
+            window.location.href = '/logout';
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                hideLogoutModal();
+            }
+        });
+    </script>
 </body>
 </html>

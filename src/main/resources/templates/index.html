@@ -1,147 +1,427 @@
-    <!DOCTYPE html>
-    <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Home | QuickRental Solutions</title>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-         <link rel="icon" type="image/png" href="icon.png">
-
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-                font-family: 'Poppins', sans-serif;
-            }
-
-            body {
-                height: 100vh;
-                overflow: hidden;
-            }
-
-            /* Navbar */
-            .navbar {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 50px;
-                background: rgba(0, 0, 0, 0.85);
-                color: white;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 12px 30px;
-                z-index: 10;
-            }
-
-            .navbar .logo {
-                font-family: "Poppins";
-                font-size: 1.2rem;
-            }
-
-            .navbar .buttons {
-                display: flex;
-                gap: 10px;
-            }
-
-            .navbar button {
-                background: transparent;
-                border: 2px; color:white;
-                color: white;
-                padding: 6px 14px;
-                border-radius: 6px;
-                cursor: pointer;
-                font-size: 0.9rem;
-            }
-
-            .navbar button:hover {
-                opacity: 0.8;
-                background-color: #ffffff;
-                color:#000000;
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | QuickRental Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
-            .navbar .register-btn {
-                background-color: #4e46e5; /* blue */
-                color: white;
+        body {
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 30px;
+            z-index: 100;
+            opacity: 0.9;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(0, 0, 0, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .navbar .logo {
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .navbar .buttons {
+            display: flex;
+            gap: 13px;
+        }
+
+        .navbar button {
+            background: transparent;
+            border: 1.5px solid white;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .navbar button:hover {
+            background-color: #ffffff;
+            color: #000000;
+            transform: translateY(-2px);
+        }
+
+        .navbar .register-btn {
+            background-color: #4e46e5;
+            border-color: #4e46e5;
+        }
+
+        .navbar .register-btn:hover {
+            background: #3b36c7;
+            border-color: #3b36c7;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.4)),
+                        url('background.jpg') center/cover no-repeat fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 80px 20px 60px;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            text-align: center;
+            color: white;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
             }
-
-            .navbar .register-btn:hover {
-                background: #4e46e5f6;
-                color: white;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
+        }
 
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
 
-            /* Hero Section */
-            .hero {
-                height: 100vh;
-                background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.2)),
-                    url('background.jpg') center/cover no-repeat;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                text-align: center;
-            }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 35px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
 
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn {
+            padding: 12px 30px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .hero-btn-primary {
+            background: #4e46e5;
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 70, 229, 0.4);
+        }
+
+        .hero-btn-primary:hover {
+            background: #3b36c7;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(78, 70, 229, 0.6);
+        }
+
+        .hero-btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 20px;
+            background: white;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 15px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 30px;
+            border-radius: 12px;
+            background: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: white;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #4e46e5 0%, #3b36c7 100%);
+            color: white;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 80px 20px;
+            background: white;
+            text-align: center;
+        }
+
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
             .hero h1 {
-                font-size: 3.0rem;
-                font-weight: 600;
-                margin-bottom: 15px;
+                font-size: 2.2rem;
             }
 
             .hero p {
-                font-size: 1.0rem;
-                max-width: 550px;
-                margin: 0 auto 25px;
-                line-height: 1.5;
+                font-size: 1rem;
             }
 
-            .hero .book-btn {
-                background: white;
-                color: black;
-                border: none;
-                border-radius: 20px;
-                padding: 7px 18px;
-                font-size: 0.95rem;
-                cursor: pointer;
-                transition: all 0.2s ease;
+            .navbar {
+                padding: 12px 20px;
             }
 
-            .hero .book-btn:hover {
-                background: #ddd;
+            .navbar .buttons {
+                flex-direction: column;
+                gap: 8px;
             }
 
-            @media (max-width: 768px) {
-                .hero h1 {
-                    font-size: 2rem;
-                }
-
-                .hero p {
-                    font-size: 0.8rem;
-                    padding: 0 20px;
-                }
+            .hero-buttons {
+                flex-direction: column;
+                align-items: stretch;
             }
-        </style>
-    </head>
-    <body>
 
-        <header class="navbar">
-            <div class="logo">QuickRental Solutions</div>
-            <div class="buttons">
-                <button onclick="window.location.href='/emplogin'" class="login-btn">Employee Login</button>
-                <button onclick="window.location.href='/login'" class="login-btn">Login</button>
-                <button onclick="window.location.href='/register'" class="register-btn">Register</button>
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar" id="navbar">
+        <div class="logo">QuickRental Solutions</div>
+        <div class="buttons">
+            <button onclick="window.location.href='/emplogin'">Employee Login</button>
+            <button onclick="window.location.href='/login'">Login</button>
+            <button onclick="window.location.href='/register'" class="register-btn">Register</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Drive your journey<br>confidence</h1>
+            <p>Reliable vehicle rental for every adventure.<br>Simple booking, wide selection and unbeatable service.</p>
+            <div class="hero-buttons">
+                <button onclick="window.location.href='/register'" class="hero-btn hero-btn-primary">Get Started</button>
+                <button onclick="window.location.href='/login'" class="hero-btn hero-btn-secondary">Browse Vehicles</button>
             </div>
-        </header>
+        </div>
+    </section>
 
-        <section class="hero">
-            <h1>Drive your journey<br>with confidence</h1>
-            <p>Reliable vehicle rentals for every adventure. Simple booking, wide selection, and unbeatable service.</p>
-            <button onclick="window.location.href='/login'" class="book-btn">Book now</button>
-        </section>
+    <section class="features">
+        <div class="features-container">
+            <h2 class="section-title">Why Choose Us</h2>
+            <p class="section-subtitle">Experience hassle-free vehicle rentals with our premium services</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🚗</div>
+                    <h3>Wide Selection</h3>
+                    <p>Choose from a diverse fleet of cars, bikes, and scooters to match your needs and budget.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Instant Booking</h3>
+                    <p>Book your vehicle in minutes with our simple and streamlined booking process.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Best Prices</h3>
+                    <p>Competitive rates with transparent pricing and no hidden charges.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Safe & Secure</h3>
+                    <p>All vehicles are regularly maintained and sanitized for your safety.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌟</div>
+                    <h3>Quality Service</h3>
+                    <p>24/7 customer support to assist you throughout your rental journey.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Easy Management</h3>
+                    <p>Manage your bookings, view history, and make changes anytime, anywhere.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    </body>
-    </html>
+    <section class="cta">
+        <div class="cta-container">
+            <h2>Ready to Hit the Road?</h2>
+            <p>Join thousands of satisfied customers who trust QuickRental Solutions for their vehicle rental needs.</p>
+            <button onclick="window.location.href='/register'" class="hero-btn hero-btn-primary">Start Your Journey</button>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2025 QuickRental Solutions. All rights reserved.</p>
+        <p style="margin-top: 10px; font-size: 0.85rem;">Instant Vehicle Rental Services</p>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
