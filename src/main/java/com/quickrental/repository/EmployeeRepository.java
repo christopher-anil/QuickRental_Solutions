@@ -1,10 +1,12 @@
-package com.vehicle.rental.rentalsystem.repository;
+// EmployeeRepository.java
+package com.quickrental.repository;
 
-import com.vehicle.rental.rentalsystem.model.Employee;
+import com.quickrental.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-    Employee findByEmailAndPassword(String email, String password);
+    Optional<Employee> findByEmail(String email);
 }
