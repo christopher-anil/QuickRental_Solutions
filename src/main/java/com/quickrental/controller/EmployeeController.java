@@ -6,6 +6,7 @@ import com.quickrental.model.Vehicle;
 import com.quickrental.model.Vehicle.AvailabilityStatus;
 import com.quickrental.service.EmployeeService;
 import com.quickrental.service.RentalService;
+import com.quickrental.service.RentalStatusScheduler;
 import com.quickrental.service.VehicleService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class EmployeeController {
     
     @Autowired
     private RentalService rentalService;
+    
+    @Autowired
+    private RentalStatusScheduler rentalStatusScheduler;
     
     // Show employee login page
     @GetMapping("/emplogin")
@@ -82,5 +86,106 @@ public class EmployeeController {
     public String employeeLogout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
+    }
+    
+    // Mark vehicle as maintenance
+    @PostMapping("/employee/vehicle/{vehicleId}/maintenance")
+    public String markVehicleMaintenance(@PathVariable Integer vehicleId, HttpSession session) {
+        Integer employeeId = (Integer) session.getAttribute("employeeId");
+        if (employeeId == null) {
+            return "redirect:/emplogin";
+        }
+        
+        try {
+            vehicleService.updateVehicleStatus(vehicleId, AvailabilityStatus.MAINTENANCE);
+        } catch (Exception e) {
+            // Handle error
+        }
+        
+        return "redirect:/employee/dashboard";
+    }
+    
+    // Delete vehicle
+    @PostMapping("/employee/vehicle/{vehicleId}/delete")
+    public String deleteVehicle(@PathVariable Integer vehicleId, HttpSession session) {
+        Integer employeeId = (Integer) session.getAttribute("employeeId");
+        if (employeeId == null) {
+            return "redirect:/emplogin";
+        }
+        
+        try {
+            vehicleService.deleteVehicle(vehicleId);
+        } catch (Exception e) {
+            // Handle error - vehicle might be in use
+        }
+        
+        return "redirect:/employee/dashboard";
+    }
+    
+    // Cancel rental by employee
+    @PostMapping("/employee/rental/{rentalId}/cancel")
+    public String cancelRentalByEmployee(@PathVariable Integer rentalId, HttpSession session) {
+        Integer employeeId = (Integer) session.getAttribute("employeeId");
+        if (employeeId == null) {
+            return "redirect:/emplogin";
+        }
+        
+        try {
+            rentalService.cancelRental(rentalId);
+        } catch (Exception e) {
+            // Handle error
+        }
+        
+        return "redirect:/employee/dashboard";
+    }
+    
+    // Manual trigger for status update (useful for testing)
+    @GetMapping("/employee/update-statuses")
+    public String updateStatuses(HttpSession session) {
+        Integer employeeId = (Integer) session.getAttribute("employeeId");
+        if (employeeId == null) {
+            return "redirect:/emplogin";
+        }
+        
+        rentalStatusScheduler.updateRentalStatuses();
+        return "redirect:/employee/dashboard";
+    }
+    
+    // Show add vehicle form
+    @GetMapping("/employee/vehicle/add")
+    public String showAddVehicle(HttpSession session, Model model) {
+        Integer employeeId = (Integer) session.getAttribute("employeeId");
+        if (employeeId == null) {
+            return "redirect:/emplogin";
+        }
+        
+        model.addAttribute("employeeName", session.getAttribute("employeeName"));
+        return "add-vehicle";
+    }
+    
+    // Handle add vehicle
+    @PostMapping("/employee/vehicle/add")
+    public String addVehicle(@RequestParam String name,
+                            @RequestParam String brand,
+                            @RequestParam String model,
+                            @RequestParam String vehicleType,
+                            @RequestParam String fuelType,
+                            @RequestParam String transmission,
+                            @RequestParam Integer seatingCapacity,
+                            @RequestParam Double ratePerDay,
+                            HttpSession session) {
+        Integer employeeId = (Integer) session.getAttribute("employeeId");
+        if (employeeId == null) {
+            return "redirect:/emplogin";
+        }
+        
+        try {
+            vehicleService.addVehicle(name, brand, model, vehicleType, fuelType, 
+                                     transmission, seatingCapacity, ratePerDay);
+        } catch (Exception e) {
+            // Handle error
+        }
+        
+        return "redirect:/employee/dashboard";
     }
 }

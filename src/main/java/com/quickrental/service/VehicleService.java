@@ -44,4 +44,34 @@ public class VehicleService {
         vehicle.setAvailabilityStatus(status);
         return vehicleRepository.save(vehicle);
     }
+    
+    public void deleteVehicle(Integer vehicleId) {
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+            .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+        
+        // Only delete if vehicle is AVAILABLE or in MAINTENANCE
+        if (vehicle.getAvailabilityStatus() == AvailabilityStatus.BOOKED ||
+            vehicle.getAvailabilityStatus() == AvailabilityStatus.RENTED) {
+            throw new RuntimeException("Cannot delete vehicle that is booked or rented");
+        }
+        
+        vehicleRepository.delete(vehicle);
+    }
+    
+    public Vehicle addVehicle(String name, String brand, String model, String vehicleType,
+                             String fuelType, String transmission, Integer seatingCapacity,
+                             Double ratePerDay) {
+        Vehicle vehicle = new Vehicle();
+        vehicle.setName(name);
+        vehicle.setBrand(brand);
+        vehicle.setModel(model);
+        vehicle.setVehicleType(Vehicle.VehicleType.valueOf(vehicleType));
+        vehicle.setFuelType(Vehicle.FuelType.valueOf(fuelType));
+        vehicle.setTransmission(Vehicle.Transmission.valueOf(transmission));
+        vehicle.setSeatingCapacity(seatingCapacity);
+        vehicle.setRatePerDay(java.math.BigDecimal.valueOf(ratePerDay));
+        vehicle.setAvailabilityStatus(AvailabilityStatus.AVAILABLE);
+        
+        return vehicleRepository.save(vehicle);
+    }
 }
